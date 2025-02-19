@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>音频转文本</title>
+</head>
+
+<body>
+    <div style="display: flex; gap: 20px;">
+        <div>
+            <h2>上传音频文件</h2>
+            <form id="upload-form" enctype="multipart/form-data">
+                <input type="file" name="audio_file">
+                <input type="submit" value="转换">
+            </form>
+        </div>
+        <div>
+            <h2>转换结果</h2>
+            <textarea id="result-textarea" rows="10" cols="50" readonly></textarea>
+            <a id="download-link" style="display: none;" href="#">下载文本</a>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('upload-form');
+        const resultTextarea = document.getElementById('result-textarea');
+        const downloadLink = document.getElementById('download-link');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch('/convert', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                resultTextarea.value = data.message;
+
+                // 轮询检查处理结果
+                const checkResult = async () => {
+                    const resultResponse = await fetch(`/check_result/${data.task_id}`);
+                    const resultData = await resultResponse.json();
+                    if (resultData.status === '完成') {
+                        resultTextarea.value = resultData.result;
+                        downloadLink.href = `/download/${data.task_id}`;
+                        downloadLink.style.display = 'block';
+                    } else {
+                        setTimeout(checkResult, 2000); // 每 2 秒检查一次
+                    }
+                };
+                checkResult();
+            } catch (error) {
+                resultTextarea.value = '处理过程中出现错误';
+            }
+        });
+    </script>
+</body>
+
+</html>
