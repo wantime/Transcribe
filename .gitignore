@@ -8,6 +8,6 @@
 !transcriber.py
 !requirements.txt
 !templates/
-!static
+!static/
 !README.md
 !.gitignore
