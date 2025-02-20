@@ -3,22 +3,47 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>音频转文本</title>
+    <title>会议转录系统</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
-    <div style="display: flex; gap: 20px;">
+    <nav class="navbar">
+        <h1>会议转录系统</h1>
+    </nav>
+    <!-- 上传区域 -->
+    <div class="container">
         <div>
-            <h2>上传音频文件</h2>
             <form id="upload-form" enctype="multipart/form-data">
+                <div class="upload-box">
+                    <input type="file" name="audio_file" id="file-input">
+                    <label for="file-input" class="upload-label">
+                        📁 点击选择会议录音文件（支持.wav .mp3格式）
+                    </label>
+                    <!-- <p style="margin-top: 1rem; color: #666;">或拖放文件到此区域</p> -->
+                </div>
+                <div class="upload-footer">
+                    <input type="submit" class="convert-btn" 
+                    value=开始转换>
+                </div>
+            </form>
+            <!-- <form id="upload-form" enctype="multipart/form-data">
                 <input type="file" name="audio_file">
                 <input type="submit" value="转换">
-            </form>
+            </form> -->
         </div>
-        <div>
-            <h2>转换结果</h2>
-            <textarea id="result-textarea" rows="10" cols="50" readonly></textarea>
-            <a id="download-link" style="display: none;" href="#">下载文本</a>
+        <div class="result-box" id="result-container">
+            <!-- <h2>转换结果</h2> -->
+            <div class="result-header">
+                <!-- <a id="download-link" style="display: none;" href="#">下载文本</a> -->
+                <a id = "download-link" class="download-btn" style="display: none;">
+                        <span class="download-icon">⬇️</span>下载文本
+                </a>
+            </div>
+            <textarea id="result-textarea" 
+                     placeholder="转换结果将在此显示..." 
+                     readonly></textarea>
         </div>
     </div>
 
@@ -26,6 +51,13 @@
         const form = document.getElementById('upload-form');
         const resultTextarea = document.getElementById('result-textarea');
         const downloadLink = document.getElementById('download-link');
+        // 文件选择反馈
+        document.getElementById('file-input').addEventListener('change', (e) => {
+            const files = e.target.files;
+            if(files.length > 0) {
+                document.querySelector('.upload-label').textContent = files[0].name;
+            }
+        });
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();

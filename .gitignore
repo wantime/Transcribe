@@ -1,0 +1,13 @@
+# .gitignore
+# 忽略所有文件
+*
+
+
+# 关注指定目录或文件
+!web-ui.py
+!transcriber.py
+!requirements.txt
+!templates/
+!static
+!README.md
+!.gitignore
