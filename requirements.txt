@@ -1,10 +1,4 @@
-soundfile
-sounddevice
-pyaudio
-
-numpy
-
 faster-whisper
-
 flask
 pydub
+

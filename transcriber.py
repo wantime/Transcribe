@@ -7,7 +7,7 @@ class Transcriber:
     """
 
     def __init__(self,
-                 model_name="base",
+                 model_name="large-v3",
                  backend="faster_whisper",
                  beam_size=5,
                  language="zh"):
@@ -31,4 +31,3 @@ class Transcriber:
             text += segment.text + "."
 
         return text
-
